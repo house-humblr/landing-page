@@ -1,0 +1,145 @@
+/* =============================================================
+   GlowButton — Context-aware glowing card CTA
+   Wider, shorter proportions for a download-button feel.
+   Dark cards on light background for max contrast.
+   ============================================================= */
+
+.card {
+  --icon-blur:       28;
+  --icon-saturate:   5.0;
+  --icon-brightness: 1.3;
+  --icon-scale:      3.4;
+  --icon-opacity:    0.3;
+  --border-width:    3;
+  --border-saturate: 4.2;
+  --border-brightness: 2.5;
+  --border-contrast: 2.5;
+
+  position: relative;
+  width: 260px;
+  aspect-ratio: 5 / 2.4;
+  border-radius: 20px;
+  outline: 1px solid rgba(255, 255, 255, 0.06);
+  background: #111;
+  cursor: pointer;
+  container-type: size;
+  text-decoration: none;
+  color: #e5e7eb;
+  display: block;
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.04),
+    0 12px 28px rgba(0, 0, 0, 0.1);
+
+  transition-property: translate, scale, box-shadow;
+  transition-duration: 0.2s;
+  transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+.card:hover {
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.04),
+    0 20px 44px rgba(0, 0, 0, 0.14);
+}
+
+.card:active {
+  translate: 0 1px;
+  scale: 0.99;
+}
+
+.inner {
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  clip-path: inset(0 round 20px);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0 1.5rem;
+}
+
+.glowIcon {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  transform: translateZ(0);
+  translate:
+    calc(var(--pointer-x, -10) * 50cqi)
+    calc(var(--pointer-y, -10) * 50cqh);
+  scale: var(--icon-scale);
+  opacity: var(--icon-opacity);
+  will-change: translate, filter;
+  transition: opacity 0.25s ease-out;
+  filter:
+    url(#glow-blur)
+    saturate(var(--icon-saturate))
+    brightness(var(--icon-brightness));
+}
+
+.card:is(:hover, :focus-within) .glowIcon {
+  opacity: 0.65;
+}
+
+.glowIcon svg,
+.glowIcon img {
+  width: 80px;
+  height: 80px;
+}
+
+.realIcon {
+  position: relative;
+  z-index: 2;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+.realIcon svg,
+.realIcon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.label {
+  position: relative;
+  z-index: 4;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.card::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+  inset: 0;
+  border-radius: inherit;
+  border: calc(var(--border-width) * 1px) solid transparent;
+  backdrop-filter:
+    saturate(var(--border-saturate))
+    brightness(var(--border-brightness))
+    contrast(var(--border-contrast));
+  mask:
+    linear-gradient(#fff 0 100%) border-box,
+    linear-gradient(#fff 0 100%) padding-box;
+  mask-composite: exclude;
+  -webkit-mask:
+    linear-gradient(#fff 0 100%) border-box,
+    linear-gradient(#fff 0 100%) padding-box;
+  -webkit-mask-composite: xor;
+  z-index: 2;
+  clip-path: inset(0 round 20px);
+  transform: translateZ(0);
+}
+
+@media (max-width: 520px) {
+  .card {
+    width: min(260px, calc(100vw - 3rem));
+  }
+}

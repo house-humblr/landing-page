@@ -1,0 +1,188 @@
+/* =============================================================
+   SHOWCASE — Interactive 3D product preview
+   Each element tilts independently based on mouse position.
+   Transforms are driven by CSS custom properties set via JS:
+     --rx  (rotateX in degrees)
+     --ry  (rotateY in degrees)
+     --tz  (translateZ on overlay)
+   ============================================================= */
+
+.showcase {
+  position: relative;
+  z-index: 1;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  position: relative;
+  width: 100%;
+  max-width: 880px;
+  perspective: 1000px;
+}
+
+/* ----- Browser window frame ----- */
+.browserFrame {
+  background: var(--bg-surface);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.03),
+    0 8px 24px rgba(0, 0, 0, 0.3),
+    0 40px 80px rgba(0, 0, 0, 0.4);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
+  will-change: transform;
+  transform: rotateX(calc(var(--rx, 0) * 1deg))
+    rotateY(calc(var(--ry, 0) * 1deg));
+  transition:
+    transform 0.45s cubic-bezier(0.03, 0.98, 0.52, 0.99),
+    box-shadow 0.45s ease;
+}
+
+.browserFrame:hover {
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    0 12px 32px rgba(0, 0, 0, 0.35),
+    0 48px 96px rgba(0, 0, 0, 0.45);
+}
+
+/* macOS-style top bar with traffic-light dots */
+.browserBar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 16px;
+  background: var(--bg-raised);
+  border-bottom: 1px solid var(--border);
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.dotRed {
+  background: #ff5f57;
+}
+.dotYellow {
+  background: #febc2e;
+}
+.dotGreen {
+  background: #28c840;
+}
+
+.url {
+  flex: 1;
+  margin-left: 12px;
+  padding: 5px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.72rem;
+  color: var(--text-subtle);
+  font-family: monospace;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Main screenshot — constrained height with bottom fade */
+.browserContent {
+  position: relative;
+  max-height: 520px;
+  overflow: hidden;
+}
+
+.browserContent::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  background: linear-gradient(to bottom, transparent, var(--bg-surface));
+  pointer-events: none;
+}
+
+.mainImg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+/* ----- Floating comment overlay ----- */
+.overlay {
+  position: absolute;
+  bottom: -4rem;
+  right: -1.5rem;
+  width: 75%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    0 12px 32px rgba(0, 0, 0, 0.3),
+    0 48px 80px rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--border-light);
+  z-index: 2;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
+  will-change: transform;
+  transform: rotateX(calc(var(--rx, 0) * 1deg))
+    rotateY(calc(var(--ry, 0) * 1deg)) translateZ(var(--tz, 0px));
+  transition:
+    transform 0.45s cubic-bezier(0.03, 0.98, 0.52, 0.99),
+    box-shadow 0.45s ease;
+}
+
+.overlay:hover {
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 16px 40px rgba(0, 0, 0, 0.35),
+    0 56px 96px rgba(0, 0, 0, 0.3);
+}
+
+/* ----- Label pill ----- */
+.label {
+  position: absolute;
+  top: -1.5rem;
+  left: 50%;
+  translate: -50% 0;
+  white-space: nowrap;
+  font-size: 0.8rem;
+  color: var(--text-subtle);
+  background: var(--bg-raised);
+  padding: 0.25rem 1rem;
+  border-radius: 100px;
+  border: 1px solid var(--border);
+}
+
+/* ----- Responsive — disable 3D on narrow screens ----- */
+@media (max-width: 768px) {
+  .container {
+    perspective: none;
+  }
+
+  .browserFrame {
+    transform: none;
+    will-change: auto;
+  }
+
+  .overlay {
+    width: 60%;
+    right: -0.5rem;
+    bottom: -2rem;
+    transform: none;
+    will-change: auto;
+  }
+
+  .browserContent {
+    max-height: 380px;
+  }
+}
