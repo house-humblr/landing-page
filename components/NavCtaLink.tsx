@@ -4,8 +4,7 @@ import { useEffect, useState, type ReactNode } from "react";
 
 const CHROME_URL =
   "https://chromewebstore.google.com/detail/mpejgchaaggebeloaalflmihboncnalh?utm_source=item-share-cb";
-const SAFARI_URL =
-  "https://apps.apple.com/us/app/zcomments/id6759467564";
+const SAFARI_URL = "https://apps.apple.com/us/app/zcomments/id6760357073";
 
 export function NavCtaLink({
   className,

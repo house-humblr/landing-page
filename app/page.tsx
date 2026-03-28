@@ -26,7 +26,7 @@ const softwareAppSchema = {
   url: "https://humblr.house",
   downloadUrl: [
     "https://chromewebstore.google.com/detail/mpejgchaaggebeloaalflmihboncnalh?utm_source=item-share-cb",
-    "https://apps.apple.com/us/app/zcomments/id6759467564",
+    "https://apps.apple.com/us/app/zcomments/id6760357073",
   ],
   browserRequirements: "Requires Chrome 116+ or Safari 17+",
   softwareVersion: "4.3",
@@ -45,7 +45,7 @@ const organizationSchema = {
   logo: "https://humblr.house/icon-512.png",
   sameAs: [
     "https://chromewebstore.google.com/detail/mpejgchaaggebeloaalflmihboncnalh?utm_source=item-share-cb",
-    "https://apps.apple.com/us/app/zcomments/id6759467564",
+    "https://apps.apple.com/us/app/zcomments/id6760357073",
   ],
 };
 
@@ -247,7 +247,7 @@ export default function Home() {
                     section="hero"
                   />
                   <GlowButton
-                    href="https://apps.apple.com/us/app/zcomments/id6759467564"
+                    href="https://apps.apple.com/us/app/zcomments/id6760357073"
                     icon={<SafariLogo />}
                     label="Download for Safari"
                     trackingEvent="safari_download_clicked"
@@ -412,7 +412,7 @@ export default function Home() {
               section="bottom_cta"
             />
             <GlowButton
-              href="https://apps.apple.com/us/app/zcomments/id6759467564"
+              href="https://apps.apple.com/us/app/zcomments/id6760357073"
               icon={<SafariLogo />}
               label="Download for Safari"
               trackingEvent="safari_download_clicked"
@@ -440,7 +440,7 @@ export default function Home() {
             Chrome Web Store
           </a>
           <a
-            href="https://apps.apple.com/us/app/zcomments/id6759467564"
+            href="https://apps.apple.com/us/app/zcomments/id6760357073"
             target="_blank"
             rel="noopener noreferrer"
             data-mp-event="footer_app_store_clicked"
