@@ -100,14 +100,14 @@ export const metadata: Metadata = {
   },
 
   twitter: {
-    card: 'summary_large_image',
+    card: 'summary',
     title: 'Zcomments — The Comment Section Zillow Is Missing',
     description:
       'Discuss home prices, neighborhoods, and what people really think about Zillow listings. Free for Chrome and Safari.',
     images: [
       {
-        url: '/og-image.png',
-        alt: 'Zcomments — Comments on every Zillow listing',
+        url: '/card-icon.png',
+        alt: 'Zcomments logo',
       },
     ],
     creator: '@humblrhouse',
