@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: '*',
       allow: '/',
     },
-    sitemap: 'https://humblr.house/sitemap.xml',
+    sitemap: 'https://www.zcomments.io/sitemap.xml',
   };
 }

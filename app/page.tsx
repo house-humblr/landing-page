@@ -23,7 +23,7 @@ const softwareAppSchema = {
   applicationCategory: "BrowserApplication",
   operatingSystem: "Chrome, Safari, macOS, Windows",
   offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-  url: "https://humblr.house",
+  url: "https://www.zcomments.io",
   downloadUrl: [
     "https://chromewebstore.google.com/detail/mpejgchaaggebeloaalflmihboncnalh?utm_source=item-share-cb",
     "https://apps.apple.com/us/app/zcomments/id6760357073",
@@ -33,7 +33,7 @@ const softwareAppSchema = {
   author: {
     "@type": "Organization",
     name: "Zcomments",
-    url: "https://humblr.house",
+    url: "https://www.zcomments.io",
   },
 };
 
@@ -41,8 +41,8 @@ const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
   name: "Zcomments",
-  url: "https://humblr.house",
-  logo: "https://humblr.house/icon-512.png",
+  url: "https://www.zcomments.io",
+  logo: "https://www.zcomments.io/icon-512.png",
   sameAs: [
     "https://chromewebstore.google.com/detail/mpejgchaaggebeloaalflmihboncnalh?utm_source=item-share-cb",
     "https://apps.apple.com/us/app/zcomments/id6760357073",

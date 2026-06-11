@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description:
     'Zcomments privacy policy — how we collect, use, and protect your data when you use the Zcomments browser extension for Zillow.',
   alternates: {
-    canonical: 'https://humblr.house/privacy',
+    canonical: 'https://www.zcomments.io/privacy',
   },
 };
 

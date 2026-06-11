@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en" data-filter="svg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Context-Aware Glowing Cards</title>
+
+<style>
+/* =============================================================
+   BASE RESET + THEMING
+   Recreating jhey's macOS Big-Sur-style hover-glow card effect.
+   Original: https://codepen.io/jh3y/pen/WbwZaNa
+   ============================================================= */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* ---------- icon glow layer ---------- */
+  --icon-blur:       28;     /* px — fed into both SVG stdDeviation & CSS blur()   */
+  --icon-saturate:   5.0;    /* cranks up the color vividness of the blurred icon   */
+  --icon-brightness: 1.3;    /* slightly boosts luminance so colors pop on dark bg  */
+  --icon-scale:      3.4;    /* the blurred icon is scaled 3.4× so its light spills */
+  --icon-opacity:    0.25;   /* idle opacity — bumped on hover for "light on" feel  */
+
+  /* ---------- border backdrop-filter ---------- */
+  --border-width:      3;
+  --border-blur:       0;
+  --border-saturate:   4.2;
+  --border-brightness: 2.5;
+  --border-contrast:   2.5;
+
+  color-scheme: dark;
+}
+
+body {
+  background: #000;
+  color: #e5e7eb;
+  font-family: 'SF Pro Text', 'SF Pro Display', -apple-system,
+               BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Subtle dot-grid background (cosmetic — matches jhey's demo) */
+body::before {
+  --size: 45px;
+  --line: hsl(0 0% 100% / 0.06);
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    linear-gradient(90deg, var(--line) 1px, transparent 1px var(--size))
+      calc(var(--size) * 0.36) 50% / var(--size) var(--size),
+    linear-gradient(var(--line) 1px, transparent 1px var(--size))
+      0% calc(var(--size) * 0.32) / var(--size) var(--size);
+  mask: linear-gradient(-20deg, transparent 50%, white);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* =============================================================
+   TOGGLE SWITCH — top-left, switches between SVG and CSS blur
+   ============================================================= */
+
+.toggle {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  color: #a1a1aa;
+  user-select: none;
+}
+
+.toggle input {
+  appearance: none;
+  width: 40px;
+  height: 22px;
+  background: hsl(0 0% 20%);
+  border-radius: 11px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.toggle input::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+.toggle input:checked {
+  background: hsl(210, 80%, 55%);
+}
+.toggle input:checked::after {
+  transform: translateX(18px);
+}
+
+.toggle-label {
+  min-width: 5.5rem;
+}
+
+/* =============================================================
+   CARD GRID
+   ============================================================= */
+
+main {
+  padding: 5rem 1rem;
+  width: 850px;
+  max-width: calc(100vw - 2rem);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+}
+
+/* =============================================================
+   INDIVIDUAL CARD (article)
+   Each card uses container-type: size so we can reference
+   container-query units (cqi, cqh) for proportional translation.
+   ============================================================= */
+
+article {
+  width: 300px;
+  aspect-ratio: 4 / 3;
+  outline: 2px solid hsl(0 0% 20%);
+  background: hsl(0 0% 10%);
+  position: relative;
+  border-radius: 12px;
+  cursor: pointer;
+
+  /* Container queries let the glow icon translate in proportion
+     to the card's own width/height (50cqi = 50% of card width). */
+  container-type: size;
+
+  /* Subtle press feedback */
+  transition-property: translate, scale;
+  transition-duration: 0.12s;
+  transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+article:active {
+  translate: 0 1px;
+  scale: 0.99;
+}
+
+/* Inner wrapper — clip-path keeps the glow from bleeding outside
+   the card's rounded corners. */
+article > .card-inner {
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  clip-path: inset(0 round 12px);
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 0.5rem;
+}
+
+/* =============================================================
+   THE GLOW ICON (.glow-icon)
+   This is the CORE of the effect.
+
+   It's a duplicate of the real icon, positioned absolutely behind
+   it. On pointermove the JS sets --pointer-x and --pointer-y
+   (normalised –1 … +1 from center), which drives the translate.
+
+   WHY scale + translate + filter creates "colored shine":
+   • scale: 3.4  → the blurred duplicate is much larger than the
+     card, so its colors fill a wide area.
+   • translate driven by pointer → the bright center of the
+     blurred icon shifts toward the cursor, making it look like
+     light radiates from the icon toward the mouse.
+   • filter: blur + saturate + brightness → the duplicate becomes
+     a soft, hyper-colorful light source rather than a recognizable
+     image. The high saturation makes the icon's original colors
+     glow intensely.
+   ============================================================= */
+
+.glow-icon {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  transform: translateZ(0); /* promote to own compositor layer */
+
+  /*
+   * POINTER TRACKING MATH (see JS):
+   *   --pointer-x, --pointer-y are in the range [-1, 1].
+   *   Multiplying by 50cqi / 50cqh shifts the glow icon up to
+   *   50% of the card's width/height in each direction.
+   *   The default -10 keeps it off-screen before any hover.
+   */
+  translate:
+    calc(var(--pointer-x, -10) * 50cqi)
+    calc(var(--pointer-y, -10) * 50cqh);
+
+  scale: var(--icon-scale);
+  opacity: var(--icon-opacity);
+  will-change: translate, filter;
+
+  /* By default: SVG filter mode (sharper, no edge-clip issues).
+     The SVG filter reference is swapped to CSS filter via the
+     [data-filter="css"] selector below. */
+  filter:
+    url(#blur)
+    saturate(var(--icon-saturate))
+    brightness(var(--icon-brightness));
+}
+
+.glow-icon img {
+  width: 100px;
+}
+
+/* When CSS filter mode is active, replace url(#blur) with blur() */
+[data-filter="css"] .glow-icon {
+  filter:
+    blur(calc(var(--icon-blur) * 1px))
+    saturate(var(--icon-saturate))
+    brightness(var(--icon-brightness));
+}
+
+/* Hover: brighten the glow layer */
+article:is(:hover, :focus-within) .glow-icon {
+  opacity: 0.6;
+  transition: opacity 0.25s ease-out;
+}
+
+/* =============================================================
+   REAL ICON + LABEL — stacked above the glow layer via z-index
+   ============================================================= */
+
+article .real-icon {
+  position: relative;
+  z-index: 2;
+  width: 100px;
+  user-select: none;
+  pointer-events: none;
+}
+
+article h2 {
+  position: relative;
+  z-index: 4;
+  font-size: 1rem;
+  font-weight: 500;
+  user-select: none;
+}
+
+/* =============================================================
+   BORDER GLOW (article::after)
+   Uses backdrop-filter on a border-only mask so the colorful
+   glow bleeding behind the card feeds through a saturated,
+   brightened border strip. Creates a subtle "neon-edge" look.
+
+   Mask trick:
+     layer 1 (border-box): opaque everywhere
+     layer 2 (padding-box): opaque inside → excluded
+     Result: only the border strip is unmasked.
+   ============================================================= */
+
+article::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+  inset: 0;
+  border-radius: inherit;
+  border: calc(var(--border-width) * 1px) solid transparent;
+  backdrop-filter:
+    blur(calc(var(--border-blur) * 1px))
+    saturate(var(--border-saturate))
+    brightness(var(--border-brightness))
+    contrast(var(--border-contrast));
+  mask:
+    linear-gradient(#fff 0 100%) border-box,
+    linear-gradient(#fff 0 100%) padding-box;
+  mask-composite: exclude;
+  -webkit-mask:
+    linear-gradient(#fff 0 100%) border-box,
+    linear-gradient(#fff 0 100%) padding-box;
+  -webkit-mask-composite: xor;
+  z-index: 2;
+  clip-path: inset(0 round 12px);
+  transform: translateZ(0);
+}
+
+/* =============================================================
+   OPTIONS BUTTON (cosmetic — matching jhey's demo)
+   ============================================================= */
+
+article .opts-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 5;
+  width: 32px;
+  aspect-ratio: 1;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+article .opts-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: hsl(0 0% 100% / 0.1);
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+article:hover .opts-btn {
+  opacity: 0.4;
+}
+article .opts-btn:is(:hover, :focus-visible) {
+  opacity: 1;
+}
+article .opts-btn:is(:hover, :focus-visible)::before {
+  opacity: 1;
+}
+article .opts-btn svg {
+  width: 20px;
+  fill: currentColor;
+  color: #e5e7eb;
+}
+
+/* =============================================================
+   RESPONSIVE — shrink cards on narrow viewports
+   ============================================================= */
+
+@media (max-width: 680px) {
+  article {
+    width: min(300px, 100%);
+  }
+  main {
+    gap: 1.5rem;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- =============================================================
+     SVG FILTER DEFINITION
+     Pros of SVG <feGaussianBlur> over CSS blur():
+       • SVG blur extends beyond the element's bounding box, so
+         the glow isn't clipped at the edges (CSS blur clips).
+       • You can chain complex filter graphs (turbulence, lighting,
+         displacement, etc.) that CSS filter shorthand can't express.
+     Cons:
+       • Slightly more verbose to set up.
+       • stdDeviation must be set via JS (no CSS custom property).
+       • Some older browsers have subpixel rendering differences.
+     ============================================================= -->
+<svg style="display:none" aria-hidden="true">
+  <filter id="blur">
+    <feGaussianBlur stdDeviation="28"/>
+  </filter>
+</svg>
+
+<!-- TOGGLE: CSS filter ↔ SVG filter -->
+<label class="toggle">
+  <input type="checkbox" id="filter-toggle">
+  <span class="toggle-label" id="toggle-label">SVG filter</span>
+</label>
+
+<!-- =============================================================
+     CARDS
+     Each card contains:
+       1. .glow-icon  — blurred duplicate that follows pointer
+       2. .real-icon  — the sharp visible icon (z-index: 2)
+       3. h2          — app name
+       4. .opts-btn   — cosmetic "…" button
+       5. ::after     — border glow via backdrop-filter
+     ============================================================= -->
+
+<main>
+  <!-- Card 1: Finder -->
+  <article>
+    <button class="opts-btn" aria-label="options">
+      <svg viewBox="0 0 24 24"><path d="M5 12a1 1 0 102 0 1 1 0 00-2 0zm6 0a1 1 0 102 0 1 1 0 00-2 0zm6 0a1 1 0 102 0 1 1 0 00-2 0z"/></svg>
+    </button>
+    <div class="card-inner">
+      <div class="glow-icon">
+        <img src="https://assets.codepen.io/605876/finder.png" alt="">
+      </div>
+      <img class="real-icon" src="https://assets.codepen.io/605876/finder.png" alt="Finder">
+      <h2>Finder</h2>
+    </div>
+  </article>
+
+  <!-- Card 2: Photos -->
+  <article>
+    <button class="opts-btn" aria-label="options">
+      <svg viewBox="0 0 24 24"><path d="M5 12a1 1 0 102 0 1 1 0 00-2 0zm6 0a1 1 0 102 0 1 1 0 00-2 0zm6 0a1 1 0 102 0 1 1 0 00-2 0z"/></svg>
+    </button>
+    <div class="card-inner">
+      <div class="glow-icon">
+        <img src="https://assets.codepen.io/605876/photos.png" alt="">
+      </div>
+      <img class="real-icon" src="https://assets.codepen.io/605876/photos.png" alt="Photos">
+      <h2>Photos</h2>
+    </div>
+  </article>
+
+  <!-- Card 3: Spotify -->
+  <article>
+    <button class="opts-btn" aria-label="options">
+      <svg viewBox="0 0 24 24"><path d="M5 12a1 1 0 102 0 1 1 0 00-2 0zm6 0a1 1 0 102 0 1 1 0 00-2 0zm6 0a1 1 0 102 0 1 1 0 00-2 0z"/></svg>
+    </button>
+    <div class="card-inner">
+      <div class="glow-icon">
+        <img src="https://assets.codepen.io/605876/spotify.png" alt="">
+      </div>
+      <img class="real-icon" src="https://assets.codepen.io/605876/spotify.png" alt="Spotify">
+      <h2>Spotify</h2>
+    </div>
+  </article>
+
+  <!-- Card 4: Signal -->
+  <article>
+    <button class="opts-btn" aria-label="options">
+      <svg viewBox="0 0 24 24"><path d="M5 12a1 1 0 102 0 1 1 0 00-2 0zm6 0a1 1 0 102 0 1 1 0 00-2 0zm6 0a1 1 0 102 0 1 1 0 00-2 0z"/></svg>
+    </button>
+    <div class="card-inner">
+      <div class="glow-icon">
+        <img src="https://assets.codepen.io/605876/signal.png" alt="">
+      </div>
+      <img class="real-icon" src="https://assets.codepen.io/605876/signal.png" alt="Signal">
+      <h2>Signal</h2>
+    </div>
+  </article>
+</main>
+
+<script>
+/* =============================================================
+   POINTER TRACKING
+   =============================================================
+   We attach a SINGLE pointermove listener on the document (not
+   per-card) for performance — O(n) per frame where n = card count,
+   but avoids n separate listeners.
+
+   MATH:
+   1. Get the card's bounding rect.
+   2. Find its center: centerX = rect.left + rect.width / 2.
+   3. Compute the cursor's offset from center:
+        relX = event.clientX - centerX
+   4. Normalize to the range [-1, 1]:
+        x = relX / (rect.width / 2)
+      At x = -1 the cursor is at the left edge; x = 1 at right.
+   5. Store as CSS custom properties --pointer-x and --pointer-y.
+
+   In CSS, these drive:
+     translate: calc(var(--pointer-x) * 50cqi)
+                calc(var(--pointer-y) * 50cqh);
+   So the glow icon shifts up to ±50% of the card dimension,
+   keeping its center roughly under the cursor.
+   ============================================================= */
+
+const articles = document.querySelectorAll('article');
+
+/* A single rAF-throttled pointermove — avoids layout thrashing
+   by batching all custom property writes into one frame. */
+let pendingPointer = null;
+
+document.addEventListener('pointermove', (event) => {
+  if (pendingPointer) return; // already have a frame queued
+  pendingPointer = requestAnimationFrame(() => {
+    const { clientX, clientY } = event;
+
+    articles.forEach((article) => {
+      const rect = article.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+
+      /* Normalize to [-1, 1] relative to card center.
+         Values outside [-1, 1] are fine — they just push the glow
+         further off-card, which naturally fades it out. */
+      const x = (clientX - centerX) / (rect.width / 2);
+      const y = (clientY - centerY) / (rect.height / 2);
+
+      article.style.setProperty('--pointer-x', x.toFixed(3));
+      article.style.setProperty('--pointer-y', y.toFixed(3));
+    });
+
+    pendingPointer = null;
+  });
+});
+
+/* =============================================================
+   FILTER TOGGLE
+   Switches [data-filter] on <html> between "svg" and "css".
+
+   CSS filter blur():
+     + Simpler — one-line declaration.
+     + stdDeviation can use CSS custom properties via calc().
+     – The blur is clipped to the element's bounding box, so
+       edges can look cut off (especially at high blur values).
+
+   SVG <feGaussianBlur>:
+     + Extends beyond the element bounds — no edge clipping.
+     + Full access to the SVG filter graph for advanced effects.
+     – stdDeviation must be set via JS setAttribute().
+     – Slightly more verbose setup.
+   ============================================================= */
+
+const toggle = document.getElementById('filter-toggle');
+const label  = document.getElementById('toggle-label');
+
+toggle.addEventListener('change', () => {
+  const mode = toggle.checked ? 'css' : 'svg';
+  document.documentElement.dataset.filter = mode;
+  label.textContent = mode === 'css' ? 'CSS filter' : 'SVG filter';
+});
+</script>
+
+</body>
+</html>

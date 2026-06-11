@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description:
     'Zcomments terms of service — the rules and guidelines for using the Zcomments browser extension for Zillow.',
   alternates: {
-    canonical: 'https://humblr.house/terms',
+    canonical: 'https://www.zcomments.io/terms',
   },
 };
 

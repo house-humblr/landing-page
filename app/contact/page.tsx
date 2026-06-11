@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: 'Contact',
   description: 'Get in touch with the Zcomments team.',
   alternates: {
-    canonical: 'https://humblr.house/contact',
+    canonical: 'https://www.zcomments.io/contact',
   },
 };
 

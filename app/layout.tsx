@@ -27,7 +27,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://humblr.house'),
+  metadataBase: new URL('https://www.zcomments.io'),
 
   title: {
     default: 'Zcomments — Comments on Zillow Listings | Real Estate Discussion',
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
   ],
 
   applicationName: 'Zcomments',
-  authors: [{ name: 'Zcomments', url: 'https://humblr.house' }],
+  authors: [{ name: 'Zcomments', url: 'https://www.zcomments.io' }],
   creator: 'Zcomments',
   publisher: 'Zcomments',
   category: 'Real Estate',
@@ -77,14 +77,14 @@ export const metadata: Metadata = {
   },
 
   alternates: {
-    canonical: 'https://humblr.house',
+    canonical: 'https://www.zcomments.io',
   },
 
   openGraph: {
     title: 'Zcomments — The Comment Section Zillow Is Missing',
     description:
       'Discuss home prices, neighborhoods, and what people really think about Zillow listings. Free browser extension for Chrome and Safari.',
-    url: 'https://humblr.house',
+    url: 'https://www.zcomments.io',
     siteName: 'Zcomments',
     locale: 'en_US',
     type: 'website',
