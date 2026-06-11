@@ -90,9 +90,9 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/og-image.png',
-        width: 1200,
-        height: 630,
+        url: '/bannerImg.png',
+        width: 2400,
+        height: 1260,
         alt: 'Zcomments — Comments on every Zillow listing. Download for Chrome and Safari.',
         type: 'image/png',
       },
@@ -100,14 +100,14 @@ export const metadata: Metadata = {
   },
 
   twitter: {
-    card: 'summary',
+    card: 'summary_large_image',
     title: 'Zcomments — The Comment Section Zillow Is Missing',
     description:
       'Discuss home prices, neighborhoods, and what people really think about Zillow listings. Free for Chrome and Safari.',
     images: [
       {
-        url: '/card-icon.png',
-        alt: 'Zcomments logo',
+        url: '/bannerImg.png',
+        alt: 'Zcomments — Comments on every Zillow listing',
       },
     ],
     creator: '@humblrhouse',
