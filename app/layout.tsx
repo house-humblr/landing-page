@@ -83,7 +83,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "The Comment Section Zillow Is Missing",
     description:
-      "Discuss home prices, neighborhoods, and what people really think about Zillow listings. Free browser extension for Chrome and Safari.",
+      "See what people really think about any Zillow listing. Free for Chrome & Safari.",
     url: "https://www.zcomments.io",
     siteName: "Zcomments",
     locale: "en_US",
@@ -103,7 +103,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "The Comment Section Zillow Is Missing",
     description:
-      "Discuss home prices, neighborhoods, and what people really think about Zillow listings. Free for Chrome and Safari.",
+      "See what people really think about any Zillow listing. Free for Chrome & Safari.",
     images: [
       {
         url: "/bannerImg.png",
