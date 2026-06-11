@@ -1,68 +1,68 @@
-import type { Metadata, Viewport } from 'next';
-import Script from 'next/script';
-import { Inter, Instrument_Serif } from 'next/font/google';
-import { MixpanelProvider } from '@/components/MixpanelProvider';
-import './globals.css';
+import type { Metadata, Viewport } from "next";
+import Script from "next/script";
+import { Inter, Instrument_Serif } from "next/font/google";
+import { MixpanelProvider } from "@/components/MixpanelProvider";
+import "./globals.css";
 
-const GA_ID = 'G-RCXNQN4D4C';
+const GA_ID = "G-RCXNQN4D4C";
 
 const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-body',
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-body",
 });
 
 const instrumentSerif = Instrument_Serif({
-  weight: '400',
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-display',
+  weight: "400",
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-display",
 });
 
 export const viewport: Viewport = {
-  themeColor: '#0a0a0f',
-  width: 'device-width',
+  themeColor: "#0a0a0f",
+  width: "device-width",
   initialScale: 1,
   maximumScale: 5,
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://www.zcomments.io'),
+  metadataBase: new URL("https://www.zcomments.io"),
 
   title: {
-    default: 'Zcomments — Comments on Zillow Listings | Real Estate Discussion',
-    template: '%s | Zcomments',
+    default: "Zcomments — Comments on Zillow Listings | Real Estate Discussion",
+    template: "%s | Zcomments",
   },
 
   description:
-    'Zcomments adds a comment section to every Zillow listing. Discuss home prices, neighborhoods, and what people really think about properties. Free browser extension for Chrome and Safari.',
+    "Zcomments adds a comment section to every Zillow listing. Discuss home prices, neighborhoods, and what people really think about properties. Free browser extension for Chrome and Safari.",
 
   keywords: [
-    'Zillow comments',
-    'Zillow discussion',
-    'Zillow listing comments',
-    'real estate comments',
-    'real estate discussion',
-    'home price discussion',
-    'Zillow browser extension',
-    'Zillow Chrome extension',
-    'Zillow Safari extension',
-    'real estate community',
-    'property comments',
-    'housing market opinions',
-    'Zillow reviews',
-    'neighborhood discussion',
-    'Zcomments',
-    'Zcomments extension',
+    "Zillow comments",
+    "Zillow discussion",
+    "Zillow listing comments",
+    "real estate comments",
+    "real estate discussion",
+    "home price discussion",
+    "Zillow browser extension",
+    "Zillow Chrome extension",
+    "Zillow Safari extension",
+    "real estate community",
+    "property comments",
+    "housing market opinions",
+    "Zillow reviews",
+    "neighborhood discussion",
+    "Zcomments",
+    "Zcomments extension",
   ],
 
-  applicationName: 'Zcomments',
-  authors: [{ name: 'Zcomments', url: 'https://www.zcomments.io' }],
-  creator: 'Zcomments',
-  publisher: 'Zcomments',
-  category: 'Real Estate',
-  classification: 'Browser Extension',
-  referrer: 'origin-when-cross-origin',
+  applicationName: "Zcomments",
+  authors: [{ name: "Zcomments", url: "https://www.zcomments.io" }],
+  creator: "Zcomments",
+  publisher: "Zcomments",
+  category: "Real Estate",
+  classification: "Browser Extension",
+  referrer: "origin-when-cross-origin",
 
   robots: {
     index: true,
@@ -70,53 +70,53 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
     },
   },
 
   alternates: {
-    canonical: 'https://www.zcomments.io',
+    canonical: "https://www.zcomments.io",
   },
 
   openGraph: {
-    title: 'Zcomments — The Comment Section Zillow Is Missing',
+    title: "The Comment Section Zillow Is Missing",
     description:
-      'Discuss home prices, neighborhoods, and what people really think about Zillow listings. Free browser extension for Chrome and Safari.',
-    url: 'https://www.zcomments.io',
-    siteName: 'Zcomments',
-    locale: 'en_US',
-    type: 'website',
+      "Discuss home prices, neighborhoods, and what people really think about Zillow listings. Free browser extension for Chrome and Safari.",
+    url: "https://www.zcomments.io",
+    siteName: "Zcomments",
+    locale: "en_US",
+    type: "website",
     images: [
       {
-        url: '/bannerImg.png',
+        url: "/bannerImg.png",
         width: 2400,
         height: 1260,
-        alt: 'Zcomments — Comments on every Zillow listing. Download for Chrome and Safari.',
-        type: 'image/png',
+        alt: "Zcomments — Comments on every Zillow listing. Download for Chrome and Safari.",
+        type: "image/png",
       },
     ],
   },
 
   twitter: {
-    card: 'summary_large_image',
-    title: 'Zcomments — The Comment Section Zillow Is Missing',
+    card: "summary_large_image",
+    title: "The Comment Section Zillow Is Missing",
     description:
-      'Discuss home prices, neighborhoods, and what people really think about Zillow listings. Free for Chrome and Safari.',
+      "Discuss home prices, neighborhoods, and what people really think about Zillow listings. Free for Chrome and Safari.",
     images: [
       {
-        url: '/bannerImg.png',
-        alt: 'Zcomments — Comments on every Zillow listing',
+        url: "/bannerImg.png",
+        alt: "Zcomments — Comments on every Zillow listing",
       },
     ],
-    creator: '@humblrhouse',
-    site: '@humblrhouse',
+    creator: "@humblrhouse",
+    site: "@humblrhouse",
   },
 
   other: {
-    'apple-mobile-web-app-title': 'Zcomments',
-    'msapplication-TileColor': '#0a0a0f',
+    "apple-mobile-web-app-title": "Zcomments",
+    "msapplication-TileColor": "#0a0a0f",
   },
 };
 
@@ -143,7 +143,9 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.png" type="image/png" />
         <link rel="apple-touch-icon" href="/zLogo.png" />
       </head>
-      <body className={`${inter.variable} ${instrumentSerif.variable} ${inter.className}`}>
+      <body
+        className={`${inter.variable} ${instrumentSerif.variable} ${inter.className}`}
+      >
         <MixpanelProvider>{children}</MixpanelProvider>
       </body>
     </html>
