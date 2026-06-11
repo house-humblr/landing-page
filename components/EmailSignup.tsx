@@ -33,6 +33,11 @@ export function EmailSignup() {
         throw new Error(data.message || "Something went wrong");
       }
 
+      const fbq = (window as Window & { fbq?: (...args: unknown[]) => void }).fbq;
+      if (typeof fbq === "function") {
+        fbq("track", "Subscribe");
+      }
+
       setStatus("success");
       setEmail("");
     } catch (err) {

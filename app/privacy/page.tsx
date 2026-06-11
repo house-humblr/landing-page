@@ -28,7 +28,7 @@ export default function PrivacyPolicy() {
       {/* ---- CONTENT ---- */}
       <main className={styles.wrapper}>
         <h1 className={styles.title}>Privacy Policy</h1>
-        <p className={styles.lastUpdated}>Last updated: February 22, 2026</p>
+        <p className={styles.lastUpdated}>Last updated: June 11, 2026</p>
 
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Introduction</h2>
@@ -107,6 +107,17 @@ export default function PrivacyPolicy() {
             Zcomments uses browser local storage to maintain your login session, save your theme
             preference (light or dark mode), and store anonymous session and visitor identifiers for
             analytics. We do not use tracking cookies from third-party advertisers.
+          </p>
+        </section>
+
+        <section className={styles.section}>
+          <h2 className={styles.sectionTitle}>Website Advertising Analytics</h2>
+          <p className={styles.text}>
+            Our marketing website (zcomments.io) uses the Meta (Facebook) Pixel to measure the
+            effectiveness of our advertising and understand how visitors arrive at our site. This
+            applies to the website only &mdash; the Zcomments browser extension does not include the
+            Meta Pixel or any advertising trackers. Data collected by the Meta Pixel is subject to
+            Meta&rsquo;s own privacy policy.
           </p>
         </section>
 
